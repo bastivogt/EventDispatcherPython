@@ -27,6 +27,9 @@ class EventDispatcher():
         if self.has_listener(type):
             self._listeners[type](*varg)
 
+    def get_listeners(self):
+        return self._listeners
+
 
 
 
@@ -34,9 +37,9 @@ class EventDispatcher():
 
 class Counter(EventDispatcher):
 
-    ON_START = "onStart"
-    ON_CHANGE = "onChange"
-    ON_FINISH = "onFinish"
+    ON_COUNTER_START = "on_counter_start"
+    ON_COUNTER_CHANGE = "on_counter_change"
+    ON_COUNTER_FINISH = "on_counter_finish"
 
     def __init__(self, start=0, end=10, step=1):
         super().__init__()
@@ -54,14 +57,11 @@ class Counter(EventDispatcher):
         self.count = 0
 
     def run(self):
-        #print(self.ON_START)
-        self.dispatch_event(self.ON_START, self)
+        self.dispatch_event(self.ON_COUNTER_START, self)
         for i in range(self.start, self.end, self.step):
             self.count = i
-            #print("change")
-            self.dispatch_event(self.ON_CHANGE, self)
-        #print("finish")
-        self.dispatch_event(self.ON_FINISH, self)
+            self.dispatch_event(self.ON_COUNTER_CHANGE, self)
+        self.dispatch_event(self.ON_COUNTER_FINISH, self)
 
 
 
@@ -72,17 +72,18 @@ class Counter(EventDispatcher):
 c = Counter()
 
 def onStart(source):
-    print("Counter onStart")
+    print(Counter.ON_COUNTER_START + " count: " + str(source.count))
+    #source.remove_listener(Counter.ON_COUNTER_CHANGE)
 
 def onChange(source):
-    print("Counter onChange count: " + str(source.count))
+    print(Counter.ON_COUNTER_CHANGE + " count: " + str(source.count))
 
 def onFinish(source):
-    print("Counter onFinish")
+    print(Counter.ON_COUNTER_FINISH + " count: " + str(source.count))
 
-c.add_listener(Counter.ON_START, onStart)
-c.add_listener(Counter.ON_CHANGE, onChange)
-c.add_listener(Counter.ON_FINISH, onFinish)
+c.add_listener(Counter.ON_COUNTER_START, onStart)
+c.add_listener(Counter.ON_COUNTER_CHANGE, onChange)
+c.add_listener(Counter.ON_COUNTER_FINISH, onFinish)
 
 c.run()
 
