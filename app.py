@@ -23,9 +23,12 @@ class EventDispatcher():
             return True
         return False
 
-    def dispatch_event(self, type):
+    def dispatch_event(self, type, *varg):
         if self.has_listener(type):
-            self._listeners[type]()
+            self._listeners[type](*varg)
+
+
+
 
 
 
@@ -52,23 +55,29 @@ class Counter(EventDispatcher):
 
     def run(self):
         #print(self.ON_START)
-        self.dispatch_event(self.ON_START)
+        self.dispatch_event(self.ON_START, self)
         for i in range(self.start, self.end, self.step):
+            self.count = i
             #print("change")
-            self.dispatch_event(self.ON_CHANGE)
+            self.dispatch_event(self.ON_CHANGE, self)
         #print("finish")
-        self.dispatch_event(self.ON_FINISH)
+        self.dispatch_event(self.ON_FINISH, self)
+
+
+
+
+
 
 
 c = Counter()
 
-def onStart():
+def onStart(source):
     print("Counter onStart")
 
-def onChange():
-    print("Counter onChange")
+def onChange(source):
+    print("Counter onChange count: " + str(source.count))
 
-def onFinish():
+def onFinish(source):
     print("Counter onFinish")
 
 c.add_listener(Counter.ON_START, onStart)
