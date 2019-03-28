@@ -1,79 +1,20 @@
-
-
-class EventDispatcher():
-
-
-    def __init__(self):
-        self._listeners = {}
-
-    def has_listener(self, type):
-        if type in self._listeners:
-            return True
-        return False
-
-    def add_listener(self, type, listener):
-        if not self.has_listener(type):
-            self._listeners[type] = listener
-            return True
-        return False
-
-    def remove_listener(self, type):
-        if self.has_listener(type):
-            del self._listeners[type]
-            return True
-        return False
-
-    def dispatch_event(self, type):
-        if self.has_listener(type):
-            self._listeners[type]()
-
-
-
-class Counter(EventDispatcher):
-
-    ON_START = "onStart"
-    ON_CHANGE = "onChange"
-    ON_FINISH = "onFinish"
-
-    def __init__(self, start=0, end=10, step=1):
-        super().__init__()
-        self.start = start
-        self.end = end
-        self.step = step
-
-        self.count = 0
-
-    def reset(self, start=0, end=10, step=1):
-        self.start = start
-        self.end = end
-        self.step = step
-
-        self.count = 0
-
-    def run(self):
-        #print(self.ON_START)
-        self.dispatch_event(self.ON_START)
-        for i in range(self.start, self.end, self.step):
-            #print("change")
-            self.dispatch_event(self.ON_CHANGE)
-        #print("finish")
-        self.dispatch_event(self.ON_FINISH)
-
+from counter import Counter
 
 c = Counter()
 
-def onStart():
-    print("Counter onStart")
+def onStart(source):
+    print(Counter.ON_COUNTER_START + " count: " + str(source.count))
+    #source.remove_listener(Counter.ON_COUNTER_CHANGE)
 
-def onChange():
-    print("Counter onChange")
+def onChange(source):
+    print(Counter.ON_COUNTER_CHANGE + " count: " + str(source.count))
 
-def onFinish():
-    print("Counter onFinish")
+def onFinish(source):
+    print(Counter.ON_COUNTER_FINISH + " count: " + str(source.count))
 
-c.add_listener(Counter.ON_START, onStart)
-c.add_listener(Counter.ON_CHANGE, onChange)
-c.add_listener(Counter.ON_FINISH, onFinish)
+c.add_listener(Counter.ON_COUNTER_START, onStart)
+c.add_listener(Counter.ON_COUNTER_CHANGE, onChange)
+c.add_listener(Counter.ON_COUNTER_FINISH, onFinish)
 
 c.run()
 
