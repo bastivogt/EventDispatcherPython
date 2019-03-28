@@ -2,18 +2,22 @@ from counter import Counter
 
 c = Counter()
 
-def onStart(source):
+
+def on_start(source):
     print(Counter.ON_COUNTER_START + " count: " + str(source.count))
     #source.remove_listener(Counter.ON_COUNTER_CHANGE)
 
-def onChange(source):
+
+def on_change(source):
     print(Counter.ON_COUNTER_CHANGE + " count: " + str(source.count))
 
-def onFinish(source):
+
+def on_finish(source):
     print(Counter.ON_COUNTER_FINISH + " count: " + str(source.count))
 
-c.add_listener(Counter.ON_COUNTER_START, onStart)
-c.add_listener(Counter.ON_COUNTER_CHANGE, onChange)
-c.add_listener(Counter.ON_COUNTER_FINISH, onFinish)
+
+c.add_listener(Counter.ON_COUNTER_START, on_start)
+c.add_listener(Counter.ON_COUNTER_CHANGE, on_change)
+c.add_listener(Counter.ON_COUNTER_FINISH, on_finish)
 
 c.run()

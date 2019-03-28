@@ -1,5 +1,6 @@
 from herr_vogt import event_dispatcher
 
+
 class Counter(event_dispatcher.EventDispatcher):
 
     ON_COUNTER_START = "on_counter_start"
